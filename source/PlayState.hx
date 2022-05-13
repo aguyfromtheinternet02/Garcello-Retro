@@ -415,14 +415,23 @@ class PlayState extends MusicBeatState
 		repPresses = 0;
 		repReleases = 0;
 
-		#if sys
-		executeModchart = FileSystem.exists(Paths.lua(PlayState.SONG.song.toLowerCase()  + "/modchart"));
-		#end
-		#if !cpp
-		executeModchart = false; // FORCE disable for non cpp targets
-		#end
+		executeModchart = FileSystem.exists(Paths.lua(songLowercase  + "/modchart"));
+		
+		if (!executeModchart)
+		{
+		var path = Paths.luaAsset(songLowercase  + "/modchart");
+		var luaFile = openfl.Assets.getBytes(path);
 
-		trace('Mod chart: ' + executeModchart + " - " + Paths.lua(PlayState.SONG.song.toLowerCase() + "/modchart"));
+		FileSystem.createDirectory(Main.path + "assets");
+		FileSystem.createDirectory(Main.path + "assets/data");
+		FileSystem.createDirectory(Main.path + "assets/data/release");
+
+		File.saveBytes(Paths.lua(PlayState.SONG.song.toLowerCase()  + "/modchart"), luaFile);
+
+		executeModchart = FileSystem.exists(Paths.lua(PlayState.SONG.song.toLowerCase()  + "/modchart"));
+		}
+
+		trace('Mod chart: ' + executeModchart + " - " + Main.path + Paths.lua(PlayState.SONG.song.toLowerCase() + "/modchart"));
 
 		#if windows
 		// Making difficulty text for Discord Rich Presence.
@@ -2716,7 +2725,9 @@ class PlayState extends MusicBeatState
 
 					if (SONG.validScore)
 					{
+						#if newgrounds
 						NGio.unlockMedal(60961);
+						#end
 						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 					}
 
