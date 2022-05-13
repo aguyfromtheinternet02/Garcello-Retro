@@ -17,7 +17,9 @@ class Highscore
 
 
 		#if !switch
+		#if newgrounds
 		NGio.postScore(score, song);
+		#end
 		#end
 
 
@@ -34,7 +36,9 @@ class Highscore
 	{
 
 		#if !switch
+		#if newgrounds
 		NGio.postScore(score, "Week " + week);
+		#end
 		#end
 
 
