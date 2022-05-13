@@ -58,10 +58,8 @@ import openfl.filters.ShaderFilter;
 #if windows
 import Discord.DiscordClient;
 #end
-#if desktop
 import Sys;
 import sys.FileSystem;
-#end
 
 using StringTools;
 
@@ -415,12 +413,7 @@ class PlayState extends MusicBeatState
 		repPresses = 0;
 		repReleases = 0;
 
-		#if sys
 		executeModchart = FileSystem.exists(Paths.lua(PlayState.SONG.song.toLowerCase()  + "/modchart"));
-		#end
-		#if !cpp
-		executeModchart = false; // FORCE disable for non cpp targets
-		#end
 
 		trace('Mod chart: ' + executeModchart + " - " + Paths.lua(PlayState.SONG.song.toLowerCase() + "/modchart"));
 
@@ -1723,7 +1716,6 @@ class PlayState extends MusicBeatState
 		var playerCounter:Int = 0;
 
 		// Per song offset check
-		#if desktop
 			var songPath = 'assets/data/' + PlayState.SONG.song.toLowerCase() + '/';
 			for(file in sys.FileSystem.readDirectory(songPath))
 			{
@@ -1741,7 +1733,7 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
-		#end
+
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 		for (section in noteData)
 		{
@@ -2716,7 +2708,9 @@ class PlayState extends MusicBeatState
 
 					if (SONG.validScore)
 					{
+						#if newgrounds
 						NGio.unlockMedal(60961);
+						#end
 						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 					}
 
